@@ -1,115 +1,126 @@
 # Quantity Measurement App
 
-## Branch: feature/UC6-AdditionOfLengths
+## UC7 – Addition with Explicit Target Unit Specification
 
-🔗 Reference Document: 
+### Overview
 
----
+UC7 extends the addition functionality introduced in UC6 by allowing the caller to explicitly specify the target unit for the result.
 
-# UC6 — Addition of Two Length Units (Same Category)
+Instead of defaulting the result to the unit of the first operand, UC7 provides:
 
-## Goal
+add(length1, length2, targetUnit)
 
-Extend the Quantity Measurement API to support addition between two length measurements, even if they belong to different units, while returning the result in the unit of the first operand.
+This ensures greater flexibility, clarity, and API consistency.
 
-This use case builds on UC5’s conversion infrastructure.
+Example:
 
----
-
-## Core Feature
-
-Add two `Length` objects:
-
-QuantityLength.add(length1, length2)
-
-or
-
-length1.add(length2)
-
-Result:
-
-* Returned in the unit of the first operand
-* Original objects remain unchanged (immutability preserved)
+add(1 FEET, 12 INCHES, YARDS) → ~0.667 YARDS
 
 ---
 
-## Implementation Strategy
+## Objective
 
-### Validation
-
-* Both operands must be non-null
-* Units must be valid
-* Values must be finite (not NaN or infinite)
-
-### Conversion Flow
-
-1. Convert both operands to base unit (Feet)
-2. Perform addition
-3. Convert result back to unit of first operand
-4. Return new Length instance
+Provide explicit control over the unit in which the addition result should be expressed.
 
 ---
 
-## Key Concepts Applied
+## Preconditions
 
-* Arithmetic operations on value objects
-* Reuse of base-unit conversion strategy
-* Immutability principle
-* Open/Closed compliance
-* Commutativity validation
-* Identity element validation
-* Floating-point precision handling
+* Length class exists (from UC3–UC6)
+* LengthUnit enum includes:
 
----
-
-## Test Coverage
-
-### Same Unit Addition
-
-* 1 Foot + 2 Feet = 3 Feet
-* 6 Inches + 6 Inches = 12 Inches
-
-### Cross-Unit Addition
-
-* 1 Foot + 12 Inches = 2 Feet
-* 12 Inches + 1 Foot = 24 Inches
-* 1 Yard + 3 Feet = 2 Yards
-* 2.54 cm + 1 Inch ≈ 5.08 cm
-
-### Mathematical Properties
-
-* Commutativity (A + B = B + A)
-* Identity (adding zero returns same value)
-* Negative values supported
-* Large & small magnitude validation
-
-### Error Handling
-
-* Null operand throws exception
-* Invalid unit handling
-* NaN and infinite validation
+  * FEET
+  * INCHES
+  * YARDS
+  * CENTIMETERS
+* All units share a consistent base unit (FEET)
+* Inputs are valid Length objects
+* Target unit is explicitly provided
 
 ---
 
-## Example Outputs
+## Core Flow
 
-add(Quantity(1.0, FEET), Quantity(12.0, INCHES))
-→ Quantity(2.0, FEET)
+1. Validate:
 
-add(Quantity(12.0, INCHES), Quantity(1.0, FEET))
-→ Quantity(24.0, INCHES)
+   * length1 and length2 are non-null
+   * targetUnit is non-null
+   * Values are finite numbers
+   * Units belong to same measurement category
 
-add(Quantity(5.0, FEET), Quantity(0.0, INCHES))
-→ Quantity(5.0, FEET)
+2. Convert both operands to base unit (FEET)
+
+3. Add base values
+
+4. Convert result to explicitly specified targetUnit
+
+5. Return new immutable Length object
 
 ---
 
-## Learning Outcomes
+## Postconditions
 
-* Extending domain model with arithmetic operations
-* Leveraging abstraction for reuse
-* Maintaining immutability
-* Handling precision in floating-point arithmetic
-* Designing mathematically consistent APIs
+* Result is always returned in the specified target unit
+* Original operands remain unchanged (immutability preserved)
+* Addition remains commutative
+* Invalid inputs throw IllegalArgumentException
+* Accuracy maintained within floating-point tolerance
+
+---
+
+## Example Results
+
+add(1 FEET, 12 INCHES, FEET) → 2 FEET
+add(1 FEET, 12 INCHES, INCHES) → 24 INCHES
+add(1 FEET, 12 INCHES, YARDS) → ~0.667 YARDS
+add(2 YARDS, 3 FEET, FEET) → 9 FEET
+add(5 FEET, -2 FEET, INCHES) → 36 INCHES
+
+---
+
+## Concepts Applied
+
+* Method Overloading (implicit + explicit addition)
+* Explicit parameter passing
+* Base-unit conversion strategy
+* DRY principle via private utility method
+* API consistency
+* Functional programming style (pure method behavior)
+* Immutability and thread-safety
+* Commutative property validation
+* Precision handling with epsilon comparison
+
+---
+
+## Key Test Coverage
+
+* Explicit target same as first operand
+* Explicit target same as second operand
+* Explicit target different from operands
+* Cross-scale conversions (large → small, small → large)
+* Zero and negative values
+* Null target unit validation
+* Commutativity with explicit target
+* Precision tolerance across conversions
+* All unit combination coverage
+
+---
+
+## Learning Outcome
+
+UC7 demonstrates:
+
+* Flexible API design
+* Caller intent clarity
+* Scalable arithmetic abstraction
+* Clean extension without breaking previous UCs
+* Strong validation discipline
+* Unit-independent arithmetic operations
+
+---
+
+## Branch Link
+
+[https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC7-AdditionWithTargetUnit](https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC7-AdditionWithTargetUnit)
 
 ---
