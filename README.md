@@ -1,79 +1,73 @@
-# UC3 — Refactor to Generic Length Class
+# Quantity Measurement App
+
+## Branch: feature/UC4-AddNewUnits
+
+---
+
+# UC4 — Add New Units (Extensibility Proof)
 
 ## Goal
 
-Eliminate duplication between Feet and Inches classes by introducing a generic and extensible measurement model.
+Demonstrate that the refactored design (introduced in UC3) is scalable and extensible by adding new measurement units without modifying core logic.
+
+This use case validates adherence to the Open/Closed Principle.
 
 ---
 
-## Problem Identified
+## New Units Added
 
-In UC1 and UC2:
+* YARDS
+* CENTIMETERS
 
-* Feet and Inches had identical equality logic
-* Code duplication violated the DRY principle
-* Design was not scalable for adding new units
-
----
-
-## Refactoring Performed
-
-Removed:
-
-* Feet class
-* Inches class
-
-Introduced:
-
-* `Length` class
-* `LengthUnit` enum
+Only the `LengthUnit` enum was updated.
+No changes were made to the `Length` class logic.
 
 ---
 
-## Core Design Change
+## Conversion Factors
 
-Instead of creating separate classes for each unit, we implemented a single generic model:
+| Unit         | Base Conversion (Inches) |
+| ------------ | ------------------------ |
+| 1 Foot       | 12                       |
+| 1 Yard       | 36                       |
+| 1 Inch       | 1                        |
+| 1 Centimeter | 0.393701                 |
 
-Length(value, LengthUnit)
-
-This allows easy extension to additional units without duplicating logic.
-
----
-
-## Base Unit Strategy
-
-All measurements are internally converted to a common base unit: **Inches**
-
-Conversion logic:
-
-* FEET → 12 inches
-* INCHES → 1 inch
-
-Added method:
-
-convertToBaseUnit()
-
-Equality comparison now happens after converting both values to the base unit.
+All comparisons continue to use the base unit conversion strategy.
 
 ---
 
-## Tests Covered
+## Tests Added
 
-* Feet equals Feet
-* Inches equals Inches
-* 1 Foot equals 12 Inches
-* Symmetry validation
-* Transitive equality
-* Complete equals contract validation
+* Yard equals Yard
+* Yard equals Feet
+* Yard equals Inches
+* Feet equals Yard (symmetry validation)
+* Inches equals Yard (symmetry validation)
+* Centimeter equals Inches
+* Centimeter not equal to Feet
+* Transitive property validation
+
+All tests passed without modifying existing comparison logic.
+
+---
+
+## Design Validation
+
+This confirms:
+
+* The system is extensible
+* New units can be added without changing core equality logic
+* Base unit conversion strategy is stable
+* DRY principle maintained
 
 ---
 
 ## Learning Outcome
 
-* Safe refactoring using test coverage
-* Designing scalable domain models
-* Applying DRY principle
-* Improving maintainability and extensibility
-* Understanding base-unit conversion strategy
+* Applied Open/Closed Principle
+* Verified extensible architecture
+* Strengthened domain modeling
+* Ensured scalability through clean abstraction
 
 ---
