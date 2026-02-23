@@ -1,70 +1,68 @@
 # Quantity Measurement App
 
-## Branch: feature/UC1-FeetEquality
-
-Code Reference:
-[Repository Link](https://github.com/Tanishtha-Yadav/QuantityMeasurementApp)
+## Branch: feature/UC2-InchesEquality
 
 ---
 
-# UC1 — Feet Equality (TDD Implementation)
+# UC2 — Inches Equality (TDD Implementation)
 
 ## Goal
 
-Implement equality comparison between two Feet measurements using Test-Driven Development (TDD).
+Extend the system to support **Inches** unit comparison, in addition to Feet.
 
-This is the first incremental step toward building a scalable Quantity Measurement system.
-
----
-
-# Development Approach
-
-This feature strictly follows the TDD cycle:
-
-1. Write a failing test
-2. Write minimal code to pass the test
-3. Refactor without breaking tests
-
-All logic was test-driven before implementation.
+This use case builds upon UC1 and continues the incremental development approach using Test-Driven Development (TDD).
 
 ---
 
-# Tests Implemented
+## Development Approach
 
-The equality contract was validated with the following cases:
+Followed the TDD cycle:
 
-- Same value should return true
-- Different value should return false
-- Null comparison should return false
-- Comparison with different object type should return false
-- Same reference should return true
+1. Write failing tests for Inches equality
+2. Write minimal implementation to pass tests
+3. Refactor while keeping tests green
 
 ---
 
-# Implementation Details
+## Tests Implemented
 
-Created a Feet class with:
+Validated equality behavior for Inches:
 
-- A value field
-- Overridden equals() method
-- Proper equality contract handling
-
-The implementation ensures:
-
-- Reflexive behavior
-- Symmetric comparison
-- Consistency
-- Null safety
-- Type safety
+* Same value → should return true
+* Different value → should return false
+* Null comparison → should return false
+* Different object type → should return false
+* Same reference → should return true
 
 ---
 
-# Learning Outcomes
+## Implementation Details
 
-- Clear understanding of Java equals() contract
-- Practical application of Test-Driven Development
-- Writing minimal, clean implementation code
-- Maintaining code safety through refactoring
-- Following structured Git feature branch workflow
+Created an `Inches` class with:
+
+* value field
+* overridden `equals()` method
+
+The logic mirrors the Feet implementation from UC1.
+
+---
+
+## Design Observation
+
+Identified major code duplication:
+
+* Feet and Inches classes contain identical equality logic
+* Violates DRY principle
+
+This highlighted the need for abstraction in future use cases.
+
+---
+
+## Learning Outcomes
+
+* Extended system using incremental development
+* Reinforced understanding of equality contract
+* Identified design improvement opportunity
+* Recognized importance of refactoring in TDD
 
 ---
