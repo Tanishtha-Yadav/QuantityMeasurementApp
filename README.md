@@ -1,73 +1,89 @@
 # Quantity Measurement App
 
-## Branch: feature/UC4-AddNewUnits
+## Branch: feature/UC5-UnitConversion
 
 ---
 
-# UC4 — Add New Units (Extensibility Proof)
+# UC5 — Unit Conversion
 
 ## Goal
 
-Demonstrate that the refactored design (introduced in UC3) is scalable and extensible by adding new measurement units without modifying core logic.
+Extend the application to support explicit unit conversion between different measurement units.
 
-This use case validates adherence to the Open/Closed Principle.
-
----
-
-## New Units Added
-
-* YARDS
-* CENTIMETERS
-
-Only the `LengthUnit` enum was updated.
-No changes were made to the `Length` class logic.
+Until UC4, the system could compare measurements across units using base-unit conversion.
+UC5 introduces a formal conversion API for direct unit transformation.
 
 ---
 
-## Conversion Factors
+## Features Added
 
-| Unit         | Base Conversion (Inches) |
-| ------------ | ------------------------ |
-| 1 Foot       | 12                       |
-| 1 Yard       | 36                       |
-| 1 Inch       | 1                        |
-| 1 Centimeter | 0.393701                 |
+### 1. Static Conversion Method
 
-All comparisons continue to use the base unit conversion strategy.
+```
+convert(value, fromUnit, toUnit)
+```
 
----
-
-## Tests Added
-
-* Yard equals Yard
-* Yard equals Feet
-* Yard equals Inches
-* Feet equals Yard (symmetry validation)
-* Inches equals Yard (symmetry validation)
-* Centimeter equals Inches
-* Centimeter not equal to Feet
-* Transitive property validation
-
-All tests passed without modifying existing comparison logic.
+Allows conversion without creating an object.
 
 ---
 
-## Design Validation
+### 2. Instance Conversion Method
 
-This confirms:
+```
+length.convertTo(targetUnit)
+```
 
-* The system is extensible
-* New units can be added without changing core equality logic
-* Base unit conversion strategy is stable
-* DRY principle maintained
+Converts an existing Length object to another unit.
+
+---
+
+### 3. Helper / Overloaded Methods
+
+Added utility overloads to simplify usage and improve API clarity.
+
+---
+
+## Conversion Strategy
+
+All conversions are still based on the internal base unit (Inches).
+
+Flow:
+
+1. Convert source value to base unit
+2. Convert base unit to target unit
+
+This ensures consistent and scalable conversion logic.
+
+---
+
+## Test Coverage
+
+* Feet ↔ Inches conversion
+* Yards ↔ Inches conversion
+* Centimeters ↔ Inches conversion
+* Zero value handling
+* Negative value handling
+* Round-trip conversion validation
+* Null and NaN input validation
+
+All previous tests remained green, ensuring backward compatibility.
+
+---
+
+## Design Impact
+
+* No duplication introduced
+* Conversion logic reused base-unit design from UC3
+* Maintains Open/Closed Principle
+* Fully test-driven implementation
 
 ---
 
 ## Learning Outcome
 
-* Applied Open/Closed Principle
-* Verified extensible architecture
-* Strengthened domain modeling
-* Ensured scalability through clean abstraction
+* Designing clean and reusable APIs
+* Extending domain model safely
+* Handling edge cases and validations
+* Building scalable conversion architecture
 
 ---
