@@ -1,70 +1,79 @@
-# Quantity Measurement App
-
-## Branch: feature/UC1-FeetEquality
-
-Code Reference:
-[Repository Link](https://github.com/Tanishtha-Yadav/QuantityMeasurementApp)
-
----
-
-# UC1 — Feet Equality (TDD Implementation)
+# UC3 — Refactor to Generic Length Class
 
 ## Goal
 
-Implement equality comparison between two Feet measurements using Test-Driven Development (TDD).
-
-This is the first incremental step toward building a scalable Quantity Measurement system.
+Eliminate duplication between Feet and Inches classes by introducing a generic and extensible measurement model.
 
 ---
 
-# Development Approach
+## Problem Identified
 
-This feature strictly follows the TDD cycle:
+In UC1 and UC2:
 
-1. Write a failing test
-2. Write minimal code to pass the test
-3. Refactor without breaking tests
-
-All logic was test-driven before implementation.
+* Feet and Inches had identical equality logic
+* Code duplication violated the DRY principle
+* Design was not scalable for adding new units
 
 ---
 
-# Tests Implemented
+## Refactoring Performed
 
-The equality contract was validated with the following cases:
+Removed:
 
-- Same value should return true
-- Different value should return false
-- Null comparison should return false
-- Comparison with different object type should return false
-- Same reference should return true
+* Feet class
+* Inches class
 
----
+Introduced:
 
-# Implementation Details
-
-Created a Feet class with:
-
-- A value field
-- Overridden equals() method
-- Proper equality contract handling
-
-The implementation ensures:
-
-- Reflexive behavior
-- Symmetric comparison
-- Consistency
-- Null safety
-- Type safety
+* `Length` class
+* `LengthUnit` enum
 
 ---
 
-# Learning Outcomes
+## Core Design Change
 
-- Clear understanding of Java equals() contract
-- Practical application of Test-Driven Development
-- Writing minimal, clean implementation code
-- Maintaining code safety through refactoring
-- Following structured Git feature branch workflow
+Instead of creating separate classes for each unit, we implemented a single generic model:
+
+Length(value, LengthUnit)
+
+This allows easy extension to additional units without duplicating logic.
+
+---
+
+## Base Unit Strategy
+
+All measurements are internally converted to a common base unit: **Inches**
+
+Conversion logic:
+
+* FEET → 12 inches
+* INCHES → 1 inch
+
+Added method:
+
+convertToBaseUnit()
+
+Equality comparison now happens after converting both values to the base unit.
+
+---
+
+## Tests Covered
+
+* Feet equals Feet
+* Inches equals Inches
+* 1 Foot equals 12 Inches
+* Symmetry validation
+* Transitive equality
+* Complete equals contract validation
+
+---
+
+## Learning Outcome
+
+* Safe refactoring using test coverage
+* Designing scalable domain models
+* Applying DRY principle
+* Improving maintainability and extensibility
+* Understanding base-unit conversion strategy
 
 ---
