@@ -3,7 +3,7 @@
 ## Branch: feature/UC1-FeetEquality
 
 Code Reference:
-[Repositary Link](https://github.com/Tanishtha-Yadav/QuantityMeasurementApp/tree/feature/UC1-FeetEquality)
+[Repository Link](https://github.com/Tanishtha-Yadav/QuantityMeasurementApp)
 
 ---
 
