@@ -1,89 +1,115 @@
 # Quantity Measurement App
 
-## Branch: feature/UC5-UnitConversion
+## Branch: feature/UC6-AdditionOfLengths
+
+🔗 Reference Document: 
 
 ---
 
-# UC5 — Unit Conversion
+# UC6 — Addition of Two Length Units (Same Category)
 
 ## Goal
 
-Extend the application to support explicit unit conversion between different measurement units.
+Extend the Quantity Measurement API to support addition between two length measurements, even if they belong to different units, while returning the result in the unit of the first operand.
 
-Until UC4, the system could compare measurements across units using base-unit conversion.
-UC5 introduces a formal conversion API for direct unit transformation.
-
----
-
-## Features Added
-
-### 1. Static Conversion Method
-
-```
-convert(value, fromUnit, toUnit)
-```
-
-Allows conversion without creating an object.
+This use case builds on UC5’s conversion infrastructure.
 
 ---
 
-### 2. Instance Conversion Method
+## Core Feature
 
-```
-length.convertTo(targetUnit)
-```
+Add two `Length` objects:
 
-Converts an existing Length object to another unit.
+QuantityLength.add(length1, length2)
+
+or
+
+length1.add(length2)
+
+Result:
+
+* Returned in the unit of the first operand
+* Original objects remain unchanged (immutability preserved)
 
 ---
 
-### 3. Helper / Overloaded Methods
+## Implementation Strategy
 
-Added utility overloads to simplify usage and improve API clarity.
+### Validation
+
+* Both operands must be non-null
+* Units must be valid
+* Values must be finite (not NaN or infinite)
+
+### Conversion Flow
+
+1. Convert both operands to base unit (Feet)
+2. Perform addition
+3. Convert result back to unit of first operand
+4. Return new Length instance
 
 ---
 
-## Conversion Strategy
+## Key Concepts Applied
 
-All conversions are still based on the internal base unit (Inches).
-
-Flow:
-
-1. Convert source value to base unit
-2. Convert base unit to target unit
-
-This ensures consistent and scalable conversion logic.
+* Arithmetic operations on value objects
+* Reuse of base-unit conversion strategy
+* Immutability principle
+* Open/Closed compliance
+* Commutativity validation
+* Identity element validation
+* Floating-point precision handling
 
 ---
 
 ## Test Coverage
 
-* Feet ↔ Inches conversion
-* Yards ↔ Inches conversion
-* Centimeters ↔ Inches conversion
-* Zero value handling
-* Negative value handling
-* Round-trip conversion validation
-* Null and NaN input validation
+### Same Unit Addition
 
-All previous tests remained green, ensuring backward compatibility.
+* 1 Foot + 2 Feet = 3 Feet
+* 6 Inches + 6 Inches = 12 Inches
+
+### Cross-Unit Addition
+
+* 1 Foot + 12 Inches = 2 Feet
+* 12 Inches + 1 Foot = 24 Inches
+* 1 Yard + 3 Feet = 2 Yards
+* 2.54 cm + 1 Inch ≈ 5.08 cm
+
+### Mathematical Properties
+
+* Commutativity (A + B = B + A)
+* Identity (adding zero returns same value)
+* Negative values supported
+* Large & small magnitude validation
+
+### Error Handling
+
+* Null operand throws exception
+* Invalid unit handling
+* NaN and infinite validation
 
 ---
 
-## Design Impact
+## Example Outputs
 
-* No duplication introduced
-* Conversion logic reused base-unit design from UC3
-* Maintains Open/Closed Principle
-* Fully test-driven implementation
+add(Quantity(1.0, FEET), Quantity(12.0, INCHES))
+→ Quantity(2.0, FEET)
+
+add(Quantity(12.0, INCHES), Quantity(1.0, FEET))
+→ Quantity(24.0, INCHES)
+
+add(Quantity(5.0, FEET), Quantity(0.0, INCHES))
+→ Quantity(5.0, FEET)
 
 ---
 
-## Learning Outcome
+## Learning Outcomes
 
-* Designing clean and reusable APIs
-* Extending domain model safely
-* Handling edge cases and validations
-* Building scalable conversion architecture
+* Extending domain model with arithmetic operations
+* Leveraging abstraction for reuse
+* Maintaining immutability
+* Handling precision in floating-point arithmetic
+* Designing mathematically consistent APIs
 
 ---
