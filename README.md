@@ -1,98 +1,134 @@
 # Quantity Measurement App
 
-## UC8 – Refactoring LengthUnit to Standalone Enum
+## UC9 – Addition of Weight Measurement
 
 ### Overview
 
-UC8 focuses on architectural refactoring by extracting the `LengthUnit` enum from inside the `Length` class and making it a standalone top-level enum.
+UC9 extends the Quantity Measurement App by introducing a new measurement category: **Weight**.
 
-This improves separation of concerns and aligns the design with the Single Responsibility Principle (SRP).
-
-All functionality from UC1 through UC7 continues to work without modification.
+Until UC8, the system supported only **Length** measurements.
+UC9 expands the architecture to support **multiple independent measurement categories** while preserving type safety and immutability.
 
 ---
 
 ## Objective
 
-Refactor the design to:
+Introduce weight measurement support with:
 
-* Separate unit behavior from measurement logic
-* Improve scalability for future measurement categories
-* Maintain backward compatibility
-* Preserve all existing functionality
-
----
-
-## What Was Refactored
-
-### Before UC8
-
-* `LengthUnit` enum was nested inside the `Length` class
-* Conversion logic partially handled inside `Length`
-
-### After UC8
-
-* `LengthUnit` moved to its own file (standalone enum)
-* All conversion logic moved into `LengthUnit`
-* `Length` now delegates conversion responsibilities
-* Circular dependency risk removed
+* Equality comparison
+* Unit conversion
+* Addition operations
+* Explicit target unit addition
+* Category type safety
 
 ---
 
-## Design Improvements
+## Supported Weight Units
 
-### Separation of Responsibilities
-
-* `Length` → Handles:
-
-  * equality
-  * conversion delegation
-  * addition (UC6 & UC7)
-* `LengthUnit` → Handles:
-
-  * convertToBaseUnit()
-  * convertFromBaseUnit()
+| Unit          | Base Conversion    |
+| ------------- | ------------------ |
+| Kilogram (kg) | Base unit          |
+| Gram (g)      | 1 kg = 1000 g      |
+| Pound (lb)    | 1 lb = 0.453592 kg |
 
 ---
 
-## Benefits Achieved
+## Features Implemented
 
-* Cleaner architecture
-* Better SRP compliance
-* Easier to extend for:
+### 1️⃣ Equality Comparison
 
-  * Weight
-  * Volume
-  * Temperature
-* Improved readability & maintainability
-* No breaking changes
-* All previous UC tests pass successfully
+Weight objects can be compared across units.
+
+Examples:
+
+* 1 kg == 1000 g
+* 2.20462 lb == 1 kg
 
 ---
 
-## Technical Highlights
+### 2️⃣ Unit Conversion
 
-* No API changes
-* No behavior changes
-* Full backward compatibility
-* Improved modular design
-* Enhanced scalability
+Supports conversion across all weight units:
+
+* kg → g
+* g → lb
+* lb → kg
+
+Round-trip conversion maintains precision.
+
+---
+
+### 3️⃣ Addition Operations
+
+Two weights can be added:
+
+* Result returned in first operand unit
+* Result returned in explicitly specified target unit
+
+Examples:
+
+* 1 kg + 1000 g = 2 kg
+* 1 kg + 1000 g (GRAM) = 2000 g
+
+---
+
+### 4️⃣ Category Type Safety
+
+Length and Weight are independent categories.
+
+Invalid comparisons are prevented.
+
+Example:
+
+* 1 kg ≠ 1 foot
+
+Cross-category operations throw validation exceptions.
+
+---
+
+### 5️⃣ Immutability & Precision
+
+* All operations return new objects
+* No mutation of existing instances
+* Floating-point precision maintained
+* Supports zero, negative, and large values
+
+---
+
+## Architectural Impact
+
+* Reusable enum-based conversion structure
+* Separate measurement categories
+* Clean extensibility model
+* No breaking changes to Length functionality
+* Preserves UC1–UC8 behavior
+
+---
+
+## Concepts Applied
+
+* Multi-domain measurement modeling
+* Enum-based conversion abstraction
+* Category isolation
+* Arithmetic on Value Objects
+* Type safety enforcement
+* Immutability principle
 
 ---
 
 ## Learning Outcome
 
-UC8 demonstrates:
+UC9 demonstrates:
 
-* Refactoring with safety using TDD
-* Architectural evolution without breaking functionality
-* Clean separation of domain logic
-* Preparing codebase for multi-measurement support
+* Extending domain model safely
+* Supporting multiple measurement categories
+* Designing scalable conversion architecture
+* Enforcing strict type safety across domains
 
 ---
 
 ## Branch Link
 
-[https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC8-Refactor-LengthUnit](https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC8-Refactor-LengthUnit)
+[https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC9-WeightMeasurement](https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC9-WeightMeasurement)
 
 ---
