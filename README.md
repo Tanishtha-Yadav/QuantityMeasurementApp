@@ -1,139 +1,146 @@
 # Quantity Measurement App
 
-## UC10 – Generic Quantity Measurement using Interface & Generics
+## UC11 – Volume Measurement Equality, Conversion, and Addition
 
-### Overview
-
-UC10 introduces a major architectural refactor by converting the system into a **generic, reusable measurement framework** using **interfaces and generics**.
-
-The application now supports multiple measurement domains (Length and Weight) through a unified abstraction.
-
-This significantly improves scalability, maintainability, and code reuse.
-
----
+### Branch: `feature/UC11-VolumeMeasurement`
 
 ## Objective
 
-Design a flexible measurement system that:
+Extend the generic architecture introduced in UC10 to support a third measurement category: **Volume**.
 
-* Supports multiple unit categories
-* Eliminates duplication
-* Preserves type safety
-* Maintains immutability
-* Keeps backward compatibility
+Supported units:
 
----
+* LITRE (Base Unit)
+* MILLILITRE (1 L = 1000 mL)
+* GALLON (1 gal ≈ 3.78541 L)
 
-## What Was Implemented
+No changes were made to:
 
-### 1️⃣ Common Interface – `IMeasurable`
+* `Quantity<U>`
+* `IMeasurable`
+* `QuantityMeasurementApp`
+* Existing test infrastructure
 
-Created a shared interface to standardize unit behavior.
-
-Responsibilities:
-
-* convertToBaseUnit()
-* convertFromBaseUnit()
-* Unit name access
-
-This enables any future unit type (Temperature, Volume, etc.) to integrate seamlessly.
+This validates that the architecture scales seamlessly.
 
 ---
 
-### 2️⃣ Refactored Unit Enums
+## Implementation Details
 
-Both enums now implement `IMeasurable`:
+### 1. Created `VolumeUnit` Enum
 
-* LengthUnit
-* WeightUnit
+`VolumeUnit` implements `IMeasurable` and defines:
 
-Each unit defines:
+* getConversionFactor()
+* convertToBaseUnit(double value)
+* convertFromBaseUnit(double baseValue)
+* getUnitName()
 
-* Base conversion factor
-* Conversion logic
+Conversion factors (base unit: LITRE):
 
-This centralizes conversion behavior inside the unit itself.
-
----
-
-### 3️⃣ Generic Quantity Class
-
-Introduced a reusable generic class:
-
-```
-Quantity<U extends IMeasurable>
-```
-
-Capabilities:
-
-* Cross-unit equality comparison
-* Unit conversion
-* Addition (default result unit)
-* Addition with explicit target unit
-* Input validation
-* Immutable design
-
-This removes duplication across Length and Weight logic.
+* LITRE → 1.0
+* MILLILITRE → 0.001
+* GALLON → 3.78541
 
 ---
 
-### 4️⃣ Multi-Domain Support
+### 2. Equality Support
 
-System now supports:
+Verified:
 
-* Length conversions and arithmetic
-* Weight conversions and arithmetic
-
-Both domains share the same generic infrastructure.
-
----
-
-### 5️⃣ Test Coverage
-
-Added 30+ unit tests covering:
-
-* Enum conversion logic
-* Equality checks
-* Conversion operations
-* Addition operations
-* Explicit target unit addition
-* Null & invalid inputs
-* HashCode consistency
-* Immutability
-* Backward compatibility
+* 1 L = 1000 mL
+* 1 gallon ≈ 3.78541 L
+* Symmetry & transitive properties
+* Cross-category comparison returns false
 
 ---
 
-## Architectural Impact
+### 3. Unit Conversion
 
-* Generic domain modeling
-* Strong type safety across categories
-* Elimination of measurement-specific duplication
-* Scalable design for future measurement types
-* Clean separation of concerns
+Tested:
+
+* L → mL
+* mL → L
+* L → gallon
+* gallon → L
+* Round-trip conversions
+* Zero, negative, and large values
 
 ---
 
-## Key Concepts Applied
+### 4. Addition Operations
 
-* Generics with bounded types
-* Interface-driven design
-* Open/Closed Principle
-* Immutability
-* Domain abstraction
-* Reusable arithmetic logic
+Supported:
+
+* Same-unit addition
+* Cross-unit addition
+* Explicit target unit specification
+* Commutativity
+* Precision handling
+
+Examples:
+
+* 1 L + 1000 mL → 2 L
+* 3.78541 L + 1 gallon → ~2 gallons
+* Explicit conversion to millilitre or gallon
+
+---
+
+### 5. Category Isolation
+
+Confirmed:
+
+* Volume cannot be compared with Length
+* Volume cannot be compared with Weight
+* Generic type safety enforced at compile time
+* Runtime safety check in equals()
+
+---
+
+## Key Architectural Validation
+
+UC11 proves:
+
+* Generic `<U extends IMeasurable>` design scales linearly
+* New measurement categories require only a new enum
+* DRY principle maintained
+* Open/Closed Principle achieved
+* Zero modification to core engine
+
+Architecture is now validated for future categories such as:
+
+* Temperature
+* Time
+* Area
+* Speed
+
+---
+
+## Test Coverage
+
+Covered:
+
+* Litre ↔ Litre
+* Millilitre ↔ Millilitre
+* Gallon ↔ Gallon
+* Cross-unit equality
+* Conversion accuracy
+* Addition (implicit & explicit unit)
+* Null handling
+* Precision tolerance
+* Backward compatibility (UC1–UC10)
+
+All previous use cases remain fully functional.
 
 ---
 
 ## Learning Outcome
 
-UC10 demonstrates:
-
-* Advanced refactoring using TDD
-* Generic architecture design
-* Cross-domain extensibility
-* Strong compile-time type safety
-* Clean API design for measurement systems
-
+* Scalable generic architecture
+* Enum-based polymorphism
+* Interface-driven design
+* Floating-point precision management
+* Category-safe generics
+* Immutable quantity model
 
 ---
