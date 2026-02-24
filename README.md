@@ -135,10 +135,5 @@ UC10 demonstrates:
 * Strong compile-time type safety
 * Clean API design for measurement systems
 
----
-
-## Branch Link
-
-[https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC10-GenericQuantity](https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC10-GenericQuantity)
 
 ---
