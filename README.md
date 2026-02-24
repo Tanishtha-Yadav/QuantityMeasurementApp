@@ -1,134 +1,144 @@
 # Quantity Measurement App
 
-## UC9 – Addition of Weight Measurement
+## UC10 – Generic Quantity Measurement using Interface & Generics
 
 ### Overview
 
-UC9 extends the Quantity Measurement App by introducing a new measurement category: **Weight**.
+UC10 introduces a major architectural refactor by converting the system into a **generic, reusable measurement framework** using **interfaces and generics**.
 
-Until UC8, the system supported only **Length** measurements.
-UC9 expands the architecture to support **multiple independent measurement categories** while preserving type safety and immutability.
+The application now supports multiple measurement domains (Length and Weight) through a unified abstraction.
+
+This significantly improves scalability, maintainability, and code reuse.
 
 ---
 
 ## Objective
 
-Introduce weight measurement support with:
+Design a flexible measurement system that:
 
-* Equality comparison
+* Supports multiple unit categories
+* Eliminates duplication
+* Preserves type safety
+* Maintains immutability
+* Keeps backward compatibility
+
+---
+
+## What Was Implemented
+
+### 1️⃣ Common Interface – `IMeasurable`
+
+Created a shared interface to standardize unit behavior.
+
+Responsibilities:
+
+* convertToBaseUnit()
+* convertFromBaseUnit()
+* Unit name access
+
+This enables any future unit type (Temperature, Volume, etc.) to integrate seamlessly.
+
+---
+
+### 2️⃣ Refactored Unit Enums
+
+Both enums now implement `IMeasurable`:
+
+* LengthUnit
+* WeightUnit
+
+Each unit defines:
+
+* Base conversion factor
+* Conversion logic
+
+This centralizes conversion behavior inside the unit itself.
+
+---
+
+### 3️⃣ Generic Quantity Class
+
+Introduced a reusable generic class:
+
+```
+Quantity<U extends IMeasurable>
+```
+
+Capabilities:
+
+* Cross-unit equality comparison
 * Unit conversion
+* Addition (default result unit)
+* Addition with explicit target unit
+* Input validation
+* Immutable design
+
+This removes duplication across Length and Weight logic.
+
+---
+
+### 4️⃣ Multi-Domain Support
+
+System now supports:
+
+* Length conversions and arithmetic
+* Weight conversions and arithmetic
+
+Both domains share the same generic infrastructure.
+
+---
+
+### 5️⃣ Test Coverage
+
+Added 30+ unit tests covering:
+
+* Enum conversion logic
+* Equality checks
+* Conversion operations
 * Addition operations
 * Explicit target unit addition
-* Category type safety
-
----
-
-## Supported Weight Units
-
-| Unit          | Base Conversion    |
-| ------------- | ------------------ |
-| Kilogram (kg) | Base unit          |
-| Gram (g)      | 1 kg = 1000 g      |
-| Pound (lb)    | 1 lb = 0.453592 kg |
-
----
-
-## Features Implemented
-
-### 1️⃣ Equality Comparison
-
-Weight objects can be compared across units.
-
-Examples:
-
-* 1 kg == 1000 g
-* 2.20462 lb == 1 kg
-
----
-
-### 2️⃣ Unit Conversion
-
-Supports conversion across all weight units:
-
-* kg → g
-* g → lb
-* lb → kg
-
-Round-trip conversion maintains precision.
-
----
-
-### 3️⃣ Addition Operations
-
-Two weights can be added:
-
-* Result returned in first operand unit
-* Result returned in explicitly specified target unit
-
-Examples:
-
-* 1 kg + 1000 g = 2 kg
-* 1 kg + 1000 g (GRAM) = 2000 g
-
----
-
-### 4️⃣ Category Type Safety
-
-Length and Weight are independent categories.
-
-Invalid comparisons are prevented.
-
-Example:
-
-* 1 kg ≠ 1 foot
-
-Cross-category operations throw validation exceptions.
-
----
-
-### 5️⃣ Immutability & Precision
-
-* All operations return new objects
-* No mutation of existing instances
-* Floating-point precision maintained
-* Supports zero, negative, and large values
+* Null & invalid inputs
+* HashCode consistency
+* Immutability
+* Backward compatibility
 
 ---
 
 ## Architectural Impact
 
-* Reusable enum-based conversion structure
-* Separate measurement categories
-* Clean extensibility model
-* No breaking changes to Length functionality
-* Preserves UC1–UC8 behavior
+* Generic domain modeling
+* Strong type safety across categories
+* Elimination of measurement-specific duplication
+* Scalable design for future measurement types
+* Clean separation of concerns
 
 ---
 
-## Concepts Applied
+## Key Concepts Applied
 
-* Multi-domain measurement modeling
-* Enum-based conversion abstraction
-* Category isolation
-* Arithmetic on Value Objects
-* Type safety enforcement
-* Immutability principle
+* Generics with bounded types
+* Interface-driven design
+* Open/Closed Principle
+* Immutability
+* Domain abstraction
+* Reusable arithmetic logic
 
 ---
 
 ## Learning Outcome
 
-UC9 demonstrates:
+UC10 demonstrates:
 
-* Extending domain model safely
-* Supporting multiple measurement categories
-* Designing scalable conversion architecture
-* Enforcing strict type safety across domains
+* Advanced refactoring using TDD
+* Generic architecture design
+* Cross-domain extensibility
+* Strong compile-time type safety
+* Clean API design for measurement systems
 
 ---
 
 ## Branch Link
 
-[https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC9-WeightMeasurement](https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC9-WeightMeasurement)
+[https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC10-GenericQuantity](https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC10-GenericQuantity)
 
 ---
