@@ -126,9 +126,3 @@ UC9 demonstrates:
 * Enforcing strict type safety across domains
 
 ---
-
-## Branch Link
-
-[https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC9-WeightMeasurement](https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC9-WeightMeasurement)
-
----
