@@ -1,121 +1,98 @@
 # Quantity Measurement App
 
-## UC7 – Addition with Explicit Target Unit Specification
+## UC8 – Refactoring LengthUnit to Standalone Enum
 
 ### Overview
 
-UC7 extends the addition functionality introduced in UC6 by allowing the caller to explicitly specify the target unit for the result.
+UC8 focuses on architectural refactoring by extracting the `LengthUnit` enum from inside the `Length` class and making it a standalone top-level enum.
 
-Instead of defaulting the result to the unit of the first operand, UC7 provides:
+This improves separation of concerns and aligns the design with the Single Responsibility Principle (SRP).
 
-add(length1, length2, targetUnit)
-
-This ensures greater flexibility, clarity, and API consistency.
-
-Example:
-
-add(1 FEET, 12 INCHES, YARDS) → ~0.667 YARDS
+All functionality from UC1 through UC7 continues to work without modification.
 
 ---
 
 ## Objective
 
-Provide explicit control over the unit in which the addition result should be expressed.
+Refactor the design to:
+
+* Separate unit behavior from measurement logic
+* Improve scalability for future measurement categories
+* Maintain backward compatibility
+* Preserve all existing functionality
 
 ---
 
-## Preconditions
+## What Was Refactored
 
-* Length class exists (from UC3–UC6)
-* LengthUnit enum includes:
+### Before UC8
 
-  * FEET
-  * INCHES
-  * YARDS
-  * CENTIMETERS
-* All units share a consistent base unit (FEET)
-* Inputs are valid Length objects
-* Target unit is explicitly provided
+* `LengthUnit` enum was nested inside the `Length` class
+* Conversion logic partially handled inside `Length`
 
----
+### After UC8
 
-## Core Flow
-
-1. Validate:
-
-   * length1 and length2 are non-null
-   * targetUnit is non-null
-   * Values are finite numbers
-   * Units belong to same measurement category
-
-2. Convert both operands to base unit (FEET)
-
-3. Add base values
-
-4. Convert result to explicitly specified targetUnit
-
-5. Return new immutable Length object
+* `LengthUnit` moved to its own file (standalone enum)
+* All conversion logic moved into `LengthUnit`
+* `Length` now delegates conversion responsibilities
+* Circular dependency risk removed
 
 ---
 
-## Postconditions
+## Design Improvements
 
-* Result is always returned in the specified target unit
-* Original operands remain unchanged (immutability preserved)
-* Addition remains commutative
-* Invalid inputs throw IllegalArgumentException
-* Accuracy maintained within floating-point tolerance
+### Separation of Responsibilities
 
----
+* `Length` → Handles:
 
-## Example Results
+  * equality
+  * conversion delegation
+  * addition (UC6 & UC7)
+* `LengthUnit` → Handles:
 
-add(1 FEET, 12 INCHES, FEET) → 2 FEET
-add(1 FEET, 12 INCHES, INCHES) → 24 INCHES
-add(1 FEET, 12 INCHES, YARDS) → ~0.667 YARDS
-add(2 YARDS, 3 FEET, FEET) → 9 FEET
-add(5 FEET, -2 FEET, INCHES) → 36 INCHES
+  * convertToBaseUnit()
+  * convertFromBaseUnit()
 
 ---
 
-## Concepts Applied
+## Benefits Achieved
 
-* Method Overloading (implicit + explicit addition)
-* Explicit parameter passing
-* Base-unit conversion strategy
-* DRY principle via private utility method
-* API consistency
-* Functional programming style (pure method behavior)
-* Immutability and thread-safety
-* Commutative property validation
-* Precision handling with epsilon comparison
+* Cleaner architecture
+* Better SRP compliance
+* Easier to extend for:
+
+  * Weight
+  * Volume
+  * Temperature
+* Improved readability & maintainability
+* No breaking changes
+* All previous UC tests pass successfully
 
 ---
 
-## Key Test Coverage
+## Technical Highlights
 
-* Explicit target same as first operand
-* Explicit target same as second operand
-* Explicit target different from operands
-* Cross-scale conversions (large → small, small → large)
-* Zero and negative values
-* Null target unit validation
-* Commutativity with explicit target
-* Precision tolerance across conversions
-* All unit combination coverage
+* No API changes
+* No behavior changes
+* Full backward compatibility
+* Improved modular design
+* Enhanced scalability
 
 ---
 
 ## Learning Outcome
 
-UC7 demonstrates:
+UC8 demonstrates:
 
-* Flexible API design
-* Caller intent clarity
-* Scalable arithmetic abstraction
-* Clean extension without breaking previous UCs
-* Strong validation discipline
-* Unit-independent arithmetic operations
+* Refactoring with safety using TDD
+* Architectural evolution without breaking functionality
+* Clean separation of domain logic
+* Preparing codebase for multi-measurement support
 
 ---
 
+## Branch Link
+
+[https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC8-Refactor-LengthUnit](https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC8-Refactor-LengthUnit)
+
+---
