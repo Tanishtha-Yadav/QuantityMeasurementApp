@@ -1,159 +1,135 @@
 # Quantity Measurement App
 
-## UC13 – Centralized Arithmetic Logic (DRY Refactor)
+## UC14 — Temperature Measurement with Selective Arithmetic Support
 
-### Branch: `feature/UC13-Centralized-Arithmetic-Logic`
+### Branch: `feature/UC14-Temperature-Measurement`
+
 ---
 
 ## Objective
 
-Refactor arithmetic operations (add, subtract, divide) introduced in UC12 to eliminate code duplication and enforce the **DRY principle**.
+Extend the Quantity Measurement Application to support **Temperature Units** while preserving clean architecture and SOLID principles.
 
-Public API remains unchanged.
-All UC12 behaviors are preserved.
-All existing test cases pass without modification.
+Unlike Length, Weight, and Volume, temperature does **not support full arithmetic operations**. This use case refactors the system to allow **selective arithmetic capability per measurement category**.
 
 ---
 
-## Problem in UC12
+## Key Enhancements
 
-UC12 had repeated logic in:
+### 1. Added TemperatureUnit Enum
 
-* add()
-* subtract()
-* divide()
+Supported Units:
 
-Each method repeated:
+* CELSIUS
+* FAHRENHEIT
+* KELVIN
 
-* Null validation
-* Category compatibility checks
-* Finiteness checks
-* Base-unit conversion
-* Target unit handling
+Implemented:
 
-This violated:
-
-* DRY principle
-* Maintainability standards
-* Scalability for future operations
+* Accurate non-linear conversion formulas
+* Cross-unit equality
+* Override for unsupported arithmetic operations
 
 ---
 
-## Refactoring Strategy
+### 2. Refactored IMeasurable Interface
 
-### 1. Introduced `ArithmeticOperation` Enum
+Enhanced interface with:
 
-Enum-based operation dispatch:
+* Default methods for optional arithmetic support
+* `validateOperationSupport()` method
+* `supportsArithmetic()` capability check
+* Functional Interface: `SupportsArithmetic`
+* Lambda expressions for capability declaration
 
-* ADD
-* SUBTRACT
-* DIVIDE
+This ensures:
 
-Each constant defines computation logic via:
-
-* Abstract method implementation
-  or
-* Lambda expression using `DoubleBinaryOperator`
-
-This replaces if-else / switch logic.
+* Backward compatibility (UC1–UC13 remain unchanged)
+* Interface Segregation Principle compliance
+* Non-breaking interface evolution
 
 ---
 
-### 2. Centralized Validation Helper
+### 3. Selective Arithmetic Support
 
-```java id="y12a7k"
-private void validateArithmeticOperands(Quantity<U> other, U targetUnit, boolean targetRequired)
-```
+| Category    | Addition | Subtraction | Division |
+| ----------- | -------- | ----------- | -------- |
+| Length      | Yes      | Yes         | Yes      |
+| Weight      | Yes      | Yes         | Yes      |
+| Volume      | Yes      | Yes         | Yes      |
+| Temperature | ❌ No     | ❌ No        | ❌ No     |
 
-Handles:
+Temperature operations now throw:
 
-* Null operand checks
-* Null target unit checks
-* Category compatibility
-* Finiteness validation
-* Consistent error messages
+`UnsupportedOperationException`
 
-Single source of truth for validation.
-
----
-
-### 3. Centralized Arithmetic Helper
-
-```java id="l82m1r"
-private double performBaseArithmetic(Quantity<U> other, ArithmeticOperation operation)
-```
-
-Handles:
-
-* Base-unit conversion
-* Operation execution via enum
-* Division-by-zero check
-* Returns base-unit result
+With clear error messages.
 
 ---
 
-### 4. Refactored Public Methods
+### 4. Temperature Conversion Formulas
 
-Public methods now delegate:
+* °F = (°C × 9/5) + 32
+* °C = (°F − 32) × 5/9
+* K = °C + 273.15
 
-* add() → helper + conversion
-* subtract() → helper + conversion
-* divide() → helper only (returns scalar)
+Edge cases handled:
 
-Each method is now shorter, clearer, and focused.
-
----
-
-## Behavior Preservation
-
-All UC12 behaviors remain unchanged:
-
-* Cross-unit arithmetic
-* Explicit & implicit target units
-* Division returns dimensionless double
-* Non-commutative subtraction & division
-* Immutability preserved
-* Rounding applied to add/subtract only
-* Cross-category prevention intact
-
-All UC12 test cases pass without modification.
+* Absolute zero
+* -40°C = -40°F
+* Precision tolerance (epsilon-based equality)
 
 ---
 
 ## Architectural Improvements
 
-* DRY principle fully enforced
-* Single validation logic
-* Single conversion logic
-* Enum-based operation dispatch
-* Reduced code duplication
-* Cleaner method readability
-* Scalable for future operations (Multiply, Modulo, etc.)
-* Private helper encapsulation
+* Interface Segregation Principle (ISP)
+* Capability-based design
+* Default methods in interfaces
+* Lambda expressions
+* Functional interfaces
+* Non-linear unit conversion handling
+* Polymorphic error messaging
+* Generic type safety preserved
 
 ---
 
-## Scalability Validation
+## Type Safety & Cross-Category Protection
 
-Adding a new operation now requires:
+Temperature cannot be compared with:
 
-1. Add enum constant in `ArithmeticOperation`
-2. No changes to validation
-3. No duplication of conversion logic
+* Length
+* Weight
+* Volume
 
-Architecture now supports unlimited arithmetic extensions.
+Generics + runtime checks prevent category mixing.
+
+---
+
+## Testing Coverage
+
+* Cross-unit temperature equality
+* Conversion accuracy
+* Symmetry & transitive equality
+* Unsupported operation validation
+* Cross-category comparison prevention
+* Backward compatibility with UC1–UC13
+* Precision tolerance validation
+* Edge case testing
+
+All previous test cases pass without modification.
 
 ---
 
 ## Learning Outcomes
 
-* Advanced refactoring techniques
-* Enum-based polymorphism
-* Lambda expressions & functional interfaces
-* Centralized validation strategy
-* Operation dispatch without condition chains
-* Clean API preservation during internal restructuring
-* Behavior-preserving refactor
-* SOLID principle reinforcement
+* Designing extensible generic systems
+* Evolving interfaces safely
+* Handling non-linear conversions
+* Applying Interface Segregation Principle
+* Capability-based API design
+* Advanced enum behavior with lambdas
+* Clean exception semantics
+* Preserving backward compatibility in large systems
 
 ---
