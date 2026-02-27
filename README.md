@@ -1,146 +1,113 @@
 # Quantity Measurement App
 
-## UC11 – Volume Measurement Equality, Conversion, and Addition
+## UC12 – Subtraction and Division Operations
 
-### Branch: `feature/UC11-VolumeMeasurement`
-
+### Branch: `feature/UC12-Subtraction-Division`
+---
 ## Objective
 
-Extend the generic architecture introduced in UC10 to support a third measurement category: **Volume**.
+Extend the generic `Quantity<U>` architecture to support:
 
-Supported units:
+* Subtraction between quantities
+* Division between quantities (dimensionless ratio)
 
-* LITRE (Base Unit)
-* MILLILITRE (1 L = 1000 mL)
-* GALLON (1 gal ≈ 3.78541 L)
-
-No changes were made to:
-
-* `Quantity<U>`
-* `IMeasurable`
-* `QuantityMeasurementApp`
-* Existing test infrastructure
-
-This validates that the architecture scales seamlessly.
+This enhancement builds on UC1–UC11 (equality, conversion, addition) without modifying the core architecture.
 
 ---
 
-## Implementation Details
+## Features Implemented
 
-### 1. Created `VolumeUnit` Enum
+### 1. Subtraction
 
-`VolumeUnit` implements `IMeasurable` and defines:
+Added two overloaded methods:
 
-* getConversionFactor()
-* convertToBaseUnit(double value)
-* convertFromBaseUnit(double baseValue)
-* getUnitName()
+```java
+subtract(Quantity<U> other)
+subtract(Quantity<U> other, U targetUnit)
+```
 
-Conversion factors (base unit: LITRE):
+Behavior:
 
-* LITRE → 1.0
-* MILLILITRE → 0.001
-* GALLON → 3.78541
-
----
-
-### 2. Equality Support
-
-Verified:
-
-* 1 L = 1000 mL
-* 1 gallon ≈ 3.78541 L
-* Symmetry & transitive properties
-* Cross-category comparison returns false
-
----
-
-### 3. Unit Conversion
-
-Tested:
-
-* L → mL
-* mL → L
-* L → gallon
-* gallon → L
-* Round-trip conversions
-* Zero, negative, and large values
-
----
-
-### 4. Addition Operations
+* Converts both operands to base unit
+* Performs subtraction
+* Converts result to implicit (first operand) or explicit target unit
+* Rounds to two decimal places
+* Returns new immutable `Quantity<U>`
 
 Supported:
 
-* Same-unit addition
-* Cross-unit addition
+* Same-unit subtraction
+* Cross-unit subtraction (within same category)
 * Explicit target unit specification
-* Commutativity
-* Precision handling
+* Negative results
+* Zero results
+* Chained subtraction
 
-Examples:
-
-* 1 L + 1000 mL → 2 L
-* 3.78541 L + 1 gallon → ~2 gallons
-* Explicit conversion to millilitre or gallon
+Cross-category subtraction throws `IllegalArgumentException`.
 
 ---
 
-### 5. Category Isolation
+### 2. Division
 
-Confirmed:
+Added:
 
-* Volume cannot be compared with Length
-* Volume cannot be compared with Weight
-* Generic type safety enforced at compile time
-* Runtime safety check in equals()
+```java
+divide(Quantity<U> other)
+```
 
----
+Behavior:
 
-## Key Architectural Validation
+* Converts operands to base unit
+* Divides base values
+* Returns dimensionless `double`
+* Prevents division by zero (throws `ArithmeticException`)
 
-UC11 proves:
+Supported:
 
-* Generic `<U extends IMeasurable>` design scales linearly
-* New measurement categories require only a new enum
-* DRY principle maintained
-* Open/Closed Principle achieved
-* Zero modification to core engine
+* Same-unit division
+* Cross-unit division (within same category)
+* Ratio > 1
+* Ratio < 1
+* Ratio = 1
+* Large and small magnitude values
 
-Architecture is now validated for future categories such as:
-
-* Temperature
-* Time
-* Area
-* Speed
+Cross-category division throws `IllegalArgumentException`.
 
 ---
 
-## Test Coverage
+## Mathematical Properties Verified
 
-Covered:
-
-* Litre ↔ Litre
-* Millilitre ↔ Millilitre
-* Gallon ↔ Gallon
-* Cross-unit equality
-* Conversion accuracy
-* Addition (implicit & explicit unit)
-* Null handling
-* Precision tolerance
-* Backward compatibility (UC1–UC10)
-
-All previous use cases remain fully functional.
+* Subtraction is non-commutative
+* Division is non-commutative
+* Division is non-associative
+* Addition/subtraction inverse relationship validated
+* Immutability preserved
 
 ---
 
-## Learning Outcome
+## Validation & Error Handling
 
-* Scalable generic architecture
-* Enum-based polymorphism
-* Interface-driven design
-* Floating-point precision management
-* Category-safe generics
-* Immutable quantity model
+Handled:
+
+* Null operands
+* Null target units
+* NaN / infinite values
+* Division by zero
+* Cross-category operations
+* Precision rounding (subtraction only)
+
+---
+
+## Scalability
+
+Subtraction and division work across:
+
+* Length
+* Weight
+* Volume
+
+No architectural changes were required.
+
+The generic `<U extends IMeasurable>` design continues to scale cleanly.
 
 ---
