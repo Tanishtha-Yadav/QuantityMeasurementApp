@@ -1,113 +1,159 @@
 # Quantity Measurement App
 
-## UC12 – Subtraction and Division Operations
+## UC13 – Centralized Arithmetic Logic (DRY Refactor)
 
-### Branch: `feature/UC12-Subtraction-Division`
+### Branch: `feature/UC13-Centralized-Arithmetic-Logic`
 ---
+
 ## Objective
 
-Extend the generic `Quantity<U>` architecture to support:
+Refactor arithmetic operations (add, subtract, divide) introduced in UC12 to eliminate code duplication and enforce the **DRY principle**.
 
-* Subtraction between quantities
-* Division between quantities (dimensionless ratio)
-
-This enhancement builds on UC1–UC11 (equality, conversion, addition) without modifying the core architecture.
+Public API remains unchanged.
+All UC12 behaviors are preserved.
+All existing test cases pass without modification.
 
 ---
 
-## Features Implemented
+## Problem in UC12
 
-### 1. Subtraction
+UC12 had repeated logic in:
 
-Added two overloaded methods:
+* add()
+* subtract()
+* divide()
 
-```java
-subtract(Quantity<U> other)
-subtract(Quantity<U> other, U targetUnit)
+Each method repeated:
+
+* Null validation
+* Category compatibility checks
+* Finiteness checks
+* Base-unit conversion
+* Target unit handling
+
+This violated:
+
+* DRY principle
+* Maintainability standards
+* Scalability for future operations
+
+---
+
+## Refactoring Strategy
+
+### 1. Introduced `ArithmeticOperation` Enum
+
+Enum-based operation dispatch:
+
+* ADD
+* SUBTRACT
+* DIVIDE
+
+Each constant defines computation logic via:
+
+* Abstract method implementation
+  or
+* Lambda expression using `DoubleBinaryOperator`
+
+This replaces if-else / switch logic.
+
+---
+
+### 2. Centralized Validation Helper
+
+```java id="y12a7k"
+private void validateArithmeticOperands(Quantity<U> other, U targetUnit, boolean targetRequired)
 ```
 
-Behavior:
+Handles:
 
-* Converts both operands to base unit
-* Performs subtraction
-* Converts result to implicit (first operand) or explicit target unit
-* Rounds to two decimal places
-* Returns new immutable `Quantity<U>`
+* Null operand checks
+* Null target unit checks
+* Category compatibility
+* Finiteness validation
+* Consistent error messages
 
-Supported:
-
-* Same-unit subtraction
-* Cross-unit subtraction (within same category)
-* Explicit target unit specification
-* Negative results
-* Zero results
-* Chained subtraction
-
-Cross-category subtraction throws `IllegalArgumentException`.
+Single source of truth for validation.
 
 ---
 
-### 2. Division
+### 3. Centralized Arithmetic Helper
 
-Added:
-
-```java
-divide(Quantity<U> other)
+```java id="l82m1r"
+private double performBaseArithmetic(Quantity<U> other, ArithmeticOperation operation)
 ```
 
-Behavior:
+Handles:
 
-* Converts operands to base unit
-* Divides base values
-* Returns dimensionless `double`
-* Prevents division by zero (throws `ArithmeticException`)
-
-Supported:
-
-* Same-unit division
-* Cross-unit division (within same category)
-* Ratio > 1
-* Ratio < 1
-* Ratio = 1
-* Large and small magnitude values
-
-Cross-category division throws `IllegalArgumentException`.
+* Base-unit conversion
+* Operation execution via enum
+* Division-by-zero check
+* Returns base-unit result
 
 ---
 
-## Mathematical Properties Verified
+### 4. Refactored Public Methods
 
-* Subtraction is non-commutative
-* Division is non-commutative
-* Division is non-associative
-* Addition/subtraction inverse relationship validated
+Public methods now delegate:
+
+* add() → helper + conversion
+* subtract() → helper + conversion
+* divide() → helper only (returns scalar)
+
+Each method is now shorter, clearer, and focused.
+
+---
+
+## Behavior Preservation
+
+All UC12 behaviors remain unchanged:
+
+* Cross-unit arithmetic
+* Explicit & implicit target units
+* Division returns dimensionless double
+* Non-commutative subtraction & division
 * Immutability preserved
+* Rounding applied to add/subtract only
+* Cross-category prevention intact
+
+All UC12 test cases pass without modification.
 
 ---
 
-## Validation & Error Handling
+## Architectural Improvements
 
-Handled:
-
-* Null operands
-* Null target units
-* NaN / infinite values
-* Division by zero
-* Cross-category operations
-* Precision rounding (subtraction only)
+* DRY principle fully enforced
+* Single validation logic
+* Single conversion logic
+* Enum-based operation dispatch
+* Reduced code duplication
+* Cleaner method readability
+* Scalable for future operations (Multiply, Modulo, etc.)
+* Private helper encapsulation
 
 ---
 
-## Scalability
+## Scalability Validation
 
-Subtraction and division work across:
+Adding a new operation now requires:
 
-* Length
-* Weight
-* Volume
+1. Add enum constant in `ArithmeticOperation`
+2. No changes to validation
+3. No duplication of conversion logic
 
-No architectural changes were required.
+Architecture now supports unlimited arithmetic extensions.
 
-The generic `<U extends IMeasurable>` design continues to scale cleanly.
+---
+
+## Learning Outcomes
+
+* Advanced refactoring techniques
+* Enum-based polymorphism
+* Lambda expressions & functional interfaces
+* Centralized validation strategy
+* Operation dispatch without condition chains
+* Clean API preservation during internal restructuring
+* Behavior-preserving refactor
+* SOLID principle reinforcement
 
 ---
