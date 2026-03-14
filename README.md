@@ -1,135 +1,169 @@
+
 # Quantity Measurement App
 
-## UC14 — Temperature Measurement with Selective Arithmetic Support
+## UC15 — N-Tier Architecture Refactoring
 
-### Branch: `feature/UC14-Temperature-Measurement`
+### Branch: `feature/UC15-N-Tier-Architecture`
+
+Repository Link:
+[https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC15-N-Tier-Architecture](http://github.com/Tanishtha-Yadav/QuantityMeasurementApp/tree/feature/UC15-NTierArchitectureRefractor)
 
 ---
 
 ## Objective
 
-Extend the Quantity Measurement Application to support **Temperature Units** while preserving clean architecture and SOLID principles.
+UC15 refactors the **Quantity Measurement Application** from a monolithic structure into a **professional N-Tier architecture** to improve:
 
-Unlike Length, Weight, and Volume, temperature does **not support full arithmetic operations**. This use case refactors the system to allow **selective arithmetic capability per measurement category**.
+* Separation of Concerns
+* Maintainability
+* Scalability
+* Testability
 
----
-
-## Key Enhancements
-
-### 1. Added TemperatureUnit Enum
-
-Supported Units:
-
-* CELSIUS
-* FAHRENHEIT
-* KELVIN
-
-Implemented:
-
-* Accurate non-linear conversion formulas
-* Cross-unit equality
-* Override for unsupported arithmetic operations
+The application is now organized into structured layers following enterprise application design.
 
 ---
 
-### 2. Refactored IMeasurable Interface
+## Architecture
 
-Enhanced interface with:
-
-* Default methods for optional arithmetic support
-* `validateOperationSupport()` method
-* `supportsArithmetic()` capability check
-* Functional Interface: `SupportsArithmetic`
-* Lambda expressions for capability declaration
-
-This ensures:
-
-* Backward compatibility (UC1–UC13 remain unchanged)
-* Interface Segregation Principle compliance
-* Non-breaking interface evolution
-
----
-
-### 3. Selective Arithmetic Support
-
-| Category    | Addition | Subtraction | Division |
-| ----------- | -------- | ----------- | -------- |
-| Length      | Yes      | Yes         | Yes      |
-| Weight      | Yes      | Yes         | Yes      |
-| Volume      | Yes      | Yes         | Yes      |
-| Temperature | ❌ No     | ❌ No        | ❌ No     |
-
-Temperature operations now throw:
-
-`UnsupportedOperationException`
-
-With clear error messages.
+```
+Application Layer
+        |
+        v
+Controller Layer
+        |
+        v
+Service Layer
+        |
+        v
+Repository Layer
+        |
+        v
+Entity / Model Layer
+```
 
 ---
 
-### 4. Temperature Conversion Formulas
+## Layers Description
 
-* °F = (°C × 9/5) + 32
-* °C = (°F − 32) × 5/9
-* K = °C + 273.15
+### 1. Application Layer
 
-Edge cases handled:
+**Class**
 
-* Absolute zero
-* -40°C = -40°F
-* Precision tolerance (epsilon-based equality)
+* `QuantityMeasurementApp`
 
----
+**Responsibilities**
 
-## Architectural Improvements
-
-* Interface Segregation Principle (ISP)
-* Capability-based design
-* Default methods in interfaces
-* Lambda expressions
-* Functional interfaces
-* Non-linear unit conversion handling
-* Polymorphic error messaging
-* Generic type safety preserved
+* Entry point of the application
+* Initializes components
+* Invokes controller operations
 
 ---
 
-## Type Safety & Cross-Category Protection
+### 2. Controller Layer
 
-Temperature cannot be compared with:
+**Class**
 
-* Length
-* Weight
-* Volume
+* `QuantityMeasurementController`
 
-Generics + runtime checks prevent category mixing.
+**Responsibilities**
+
+* Handles user requests
+* Delegates operations to service layer
+* Returns responses to application layer
 
 ---
 
-## Testing Coverage
+### 3. Service Layer
 
-* Cross-unit temperature equality
-* Conversion accuracy
-* Symmetry & transitive equality
-* Unsupported operation validation
-* Cross-category comparison prevention
-* Backward compatibility with UC1–UC13
-* Precision tolerance validation
-* Edge case testing
+**Interface**
 
-All previous test cases pass without modification.
+* `IQuantityMeasurementService`
+
+**Implementation**
+
+* `QuantityMeasurementServiceImpl`
+
+**Business Operations**
+
+* Compare quantities
+* Add quantities
+* Subtract quantities
+* Divide quantities
+
+Contains core **business logic** of the system.
+
+---
+
+### 4. Repository Layer
+
+**Interface**
+
+* `IQuantityMeasurementRepository`
+
+**Implementation**
+
+* `QuantityMeasurementCacheRepository`
+
+**Responsibilities**
+
+* Store quantity operation history
+* Provide data access methods
+
+**Design Pattern Used**
+
+Singleton Pattern ensures **only one repository instance** exists.
+
+---
+
+### 5. Entity / Model Layer
+
+Data representation classes:
+
+* `QuantityDTO`
+* `QuantityModel`
+* `QuantityMeasurementEntity`
+
+| Class  | Purpose                               |
+| ------ | ------------------------------------- |
+| DTO    | Transfer data between layers          |
+| Model  | Internal service layer representation |
+| Entity | Store measurement records             |
+
+---
+
+## Design Principles Applied
+
+* Separation of Concerns
+* SOLID Principles
+* Dependency Injection
+
+---
+
+## Design Patterns Used
+
+* Singleton Pattern
+* Factory Pattern
+* Facade Pattern
+
+---
+
+## Testing
+
+JUnit tests verify:
+
+* Service layer operations
+* Controller request flow
+* Repository behavior
+* Edge cases and validation
 
 ---
 
 ## Learning Outcomes
 
-* Designing extensible generic systems
-* Evolving interfaces safely
-* Handling non-linear conversions
-* Applying Interface Segregation Principle
-* Capability-based API design
-* Advanced enum behavior with lambdas
-* Clean exception semantics
-* Preserving backward compatibility in large systems
+* Implementation of enterprise **layered architecture**
+* Proper **responsibility separation**
+* Improved **testability and maintainability**
+* Application of **design patterns in real architecture**
+* Clean modular system design
 
 ---
