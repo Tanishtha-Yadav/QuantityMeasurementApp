@@ -6,7 +6,7 @@
 ### Branch: `feature/UC15-N-Tier-Architecture`
 
 Repository Link:
-[https://github.com/Shifa-Khan-05/QuantityMeasurementApp/tree/feature/UC15-N-Tier-Architecture](http://github.com/Tanishtha-Yadav/QuantityMeasurementApp/tree/feature/UC15-NTierArchitectureRefractor)
+[https://github.com/Tanishtha-Yadav/QuantityMeasurementApp/tree/feature/UC15-NTierArchitectureRefractor](http://github.com/Tanishtha-Yadav/QuantityMeasurementApp/tree/feature/UC15-NTierArchitectureRefractor)
 
 ---
 
