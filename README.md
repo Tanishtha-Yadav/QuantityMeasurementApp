@@ -1,169 +1,209 @@
-
 # Quantity Measurement App
 
-## UC15 — N-Tier Architecture Refactoring
+## UC16 — Database Integration with JDBC
 
-### Branch: `feature/UC15-N-Tier-Architecture`
+### Branch: `feature/UC16-Database-Integration`
 
 Repository Link:
-[https://github.com/Tanishtha-Yadav/QuantityMeasurementApp/tree/feature/UC15-NTierArchitectureRefractor](http://github.com/Tanishtha-Yadav/QuantityMeasurementApp/tree/feature/UC15-NTierArchitectureRefractor)
+[https://github.com/Tanishtha-Yadav/QuantityMeasurementApp/tree/feature/UC16-JDBCPersistence](https://github.com/Tanishtha-Yadav/QuantityMeasurementApp/tree/feature/UC16-JDBCPersistence)
 
 ---
 
 ## Objective
 
-UC15 refactors the **Quantity Measurement Application** from a monolithic structure into a **professional N-Tier architecture** to improve:
+UC16 enhances the **Quantity Measurement Application** by introducing **database persistence using JDBC**.
+This replaces the in-memory repository with a **database-backed repository** while maintaining the **N-Tier architecture introduced in UC15**.
 
-* Separation of Concerns
-* Maintainability
-* Scalability
-* Testability
-
-The application is now organized into structured layers following enterprise application design.
+The system now supports **persistent storage, historical tracking, and database queries for measurement operations**.
 
 ---
 
-## Architecture
+## Key Enhancements
+
+### 1. JDBC-Based Repository
+
+Implemented:
+
+`QuantityMeasurementDatabaseRepository`
+
+Responsibilities:
+
+* Save quantity measurement operations
+* Retrieve stored measurements
+* Query by operation type
+* Query by measurement type
+* Delete stored measurements
+* Get measurement statistics
+
+Uses **PreparedStatement** to prevent SQL injection.
+
+---
+
+### 2. Maven Project Structure
+
+The project now follows **standard Maven layout**:
 
 ```
-Application Layer
-        |
-        v
-Controller Layer
-        |
-        v
-Service Layer
-        |
-        v
-Repository Layer
-        |
-        v
-Entity / Model Layer
+src/main/java
+src/main/resources
+src/test/java
+pom.xml
+```
+
+Packages organized by layers:
+
+* controller
+* service
+* repository
+* entity
+* exception
+* unit
+* util
+
+---
+
+### 3. Database Configuration
+
+Database used:
+
+* **H2 (in-memory database)** for development and testing
+
+Future support prepared for:
+
+* MySQL
+* PostgreSQL
+
+Configuration stored in:
+
+```
+src/main/resources/application.properties
 ```
 
 ---
 
-## Layers Description
+### 4. Connection Pool Implementation
 
-### 1. Application Layer
+Created utility class:
 
-**Class**
+`ConnectionPool`
 
-* `QuantityMeasurementApp`
+Features:
 
-**Responsibilities**
-
-* Entry point of the application
-* Initializes components
-* Invokes controller operations
-
----
-
-### 2. Controller Layer
-
-**Class**
-
-* `QuantityMeasurementController`
-
-**Responsibilities**
-
-* Handles user requests
-* Delegates operations to service layer
-* Returns responses to application layer
+* Reusable database connections
+* Pool statistics monitoring
+* Reduced connection overhead
+* Improved performance
 
 ---
 
-### 3. Service Layer
+### 5. Configuration Utility
 
-**Interface**
+Created:
 
-* `IQuantityMeasurementService`
+`ApplicationConfig`
 
-**Implementation**
+Responsibilities:
 
-* `QuantityMeasurementServiceImpl`
-
-**Business Operations**
-
-* Compare quantities
-* Add quantities
-* Subtract quantities
-* Divide quantities
-
-Contains core **business logic** of the system.
+* Load database configuration
+* Manage environment-based settings
+* Provide centralized access to application properties
 
 ---
 
-### 4. Repository Layer
+### 6. Custom Database Exception
 
-**Interface**
+Created:
 
-* `IQuantityMeasurementRepository`
+`DatabaseException`
 
-**Implementation**
+Purpose:
+
+* Wrap JDBC exceptions
+* Provide meaningful error messages
+* Improve error handling across layers
+
+---
+
+### 7. Dependency Injection Support
+
+Service layer now supports both repositories:
 
 * `QuantityMeasurementCacheRepository`
+* `QuantityMeasurementDatabaseRepository`
 
-**Responsibilities**
-
-* Store quantity operation history
-* Provide data access methods
-
-**Design Pattern Used**
-
-Singleton Pattern ensures **only one repository instance** exists.
+Repository implementation can be selected using configuration.
 
 ---
 
-### 5. Entity / Model Layer
+## Database Schema
 
-Data representation classes:
+Tables created using `schema.sql`:
 
-* `QuantityDTO`
-* `QuantityModel`
-* `QuantityMeasurementEntity`
+* `quantity_measurement_entity`
+* `quantity_measurement_history`
 
-| Class  | Purpose                               |
-| ------ | ------------------------------------- |
-| DTO    | Transfer data between layers          |
-| Model  | Internal service layer representation |
-| Entity | Store measurement records             |
+Features:
 
----
-
-## Design Principles Applied
-
-* Separation of Concerns
-* SOLID Principles
-* Dependency Injection
+* Indexed columns
+* Timestamp tracking
+* Operation logging
 
 ---
 
-## Design Patterns Used
+## Maven Dependencies Used
 
-* Singleton Pattern
-* Factory Pattern
-* Facade Pattern
+* JDBC Drivers
+* H2 Database
+* JUnit 4.13.2
+* Mockito
+* SLF4J
+* Logback
+
+Plugins:
+
+* Maven Compiler Plugin
+* Maven Surefire Plugin
+* Maven Shade Plugin
 
 ---
 
 ## Testing
 
-JUnit tests verify:
+Test coverage includes:
 
-* Service layer operations
-* Controller request flow
-* Repository behavior
-* Edge cases and validation
+* Repository CRUD operations
+* Service layer integration
+* Controller workflow
+* Connection pool behavior
+* SQL injection prevention
+* Transaction rollback scenarios
+* Integration testing with H2 database
+
+All **UC1 – UC15 tests remain fully compatible**.
+
+---
+
+## Key Concepts Implemented
+
+* JDBC Database Integration
+* Connection Pooling
+* Parameterized SQL Queries
+* Transaction Management
+* Maven Build System
+* Repository Pattern
+* Dependency Injection
+* Environment-Based Configuration
+* Integration Testing
 
 ---
 
 ## Learning Outcomes
 
-* Implementation of enterprise **layered architecture**
-* Proper **responsibility separation**
-* Improved **testability and maintainability**
-* Application of **design patterns in real architecture**
-* Clean modular system design
+* Building database-driven Java applications
+* Implementing JDBC repositories
+* Designing scalable persistence layers
+* Using Maven for project management
+* Managing database resources efficiently
+* Writing integration tests with in-memory databases
 
 ---
