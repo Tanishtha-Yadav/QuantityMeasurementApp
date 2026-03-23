@@ -75,3 +75,4 @@ HELP.md
 *.jar
 *.war
 .gitattributes
+.metadata/
