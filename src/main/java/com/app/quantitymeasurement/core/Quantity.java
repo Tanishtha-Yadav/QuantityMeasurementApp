@@ -159,6 +159,30 @@ public class Quantity<U extends IMeasurable> {
 		return performBaseArithmetic(other, this.unit, ArithmeticOperation.DIVIDE);
 	}
 
+	// COMPARISON WITH SIGN
+	public String compareWithSign(Quantity<U> other) {
+		if (other == null)
+			throw new IllegalArgumentException("Other quantity cannot be null");
+
+		if (!this.unit.getClass().equals(other.unit.getClass()))
+			throw new IllegalArgumentException("Cannot compare different unit types");
+
+		double thisBase = this.toBaseUnit();
+		double otherBase = other.toBaseUnit();
+
+		String sign;
+		if (Math.abs(thisBase - otherBase) < 0.01) {
+			sign = "=";
+		} else if (thisBase > otherBase) {
+			sign = ">";
+		} else {
+			sign = "<";
+		}
+		
+		// Return formatted string with values, units, and sign
+		return String.format("%.2f %s %s %.2f %s", this.value, this.unit.toString(), sign, other.value, other.unit.toString());
+	}
+
 	// Equality & Hashing
 	@Override
 	public boolean equals(Object obj) {
