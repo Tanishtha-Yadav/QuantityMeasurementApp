@@ -21,14 +21,14 @@ public enum LengthUnit implements IMeasurable {
 
     @Override
     public double convertToBaseUnit(double value) {
-        double result = value * conversionFactor;
-        return Math.round(result * 100.0) / 100.0;
+        // Don't round here - let final rounding happen at the end
+        return value * conversionFactor;
     }
 
     @Override
     public double convertFromBaseUnit(double baseValue) {
-        double result = baseValue / conversionFactor;
-        return Math.round(result * 100.0) / 100.0;
+        // Don't round here - let final rounding happen at the end
+        return baseValue / conversionFactor;
     }
 
     @Override

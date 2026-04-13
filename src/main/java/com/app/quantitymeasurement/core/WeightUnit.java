@@ -21,14 +21,14 @@ public enum WeightUnit implements IMeasurable {
 
     @Override
     public double convertToBaseUnit(double value) {
-        double result = value * conversionFactor; // to grams
-        return Math.round(result * 100.0) / 100.0; // round
+        // Don't round here - let final rounding happen at the end
+        return value * conversionFactor; // to grams
     }
 
     @Override
     public double convertFromBaseUnit(double baseValue) {
-        double result = baseValue / conversionFactor; // from grams
-        return Math.round(result * 100.0) / 100.0; // round
+        // Don't round here - let final rounding happen at the end
+        return baseValue / conversionFactor; // from grams
     }
 
     @Override
