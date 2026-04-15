@@ -47,7 +47,8 @@ public class JwtUtil {
 
     public String extractUsername(String token) {
         return Jwts.parser()
-                .verifyWith(getSigningKey())                 .build()
+                .verifyWith(getSigningKey())
+                .build()
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
