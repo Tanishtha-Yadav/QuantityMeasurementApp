@@ -77,3 +77,4 @@ HELP.md
 .gitattributes
 .metadata/
 src/main/resources/application-secrets.properties
+bin/
