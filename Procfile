@@ -1,1 +1,1 @@
-web: java -Dspring.profiles.active=prod -Dserver.port=$PORT $JAVA_OPTS -jar target/quantitymeasurement-*.jar
+web: java -Dspring.profiles.active=prod -jar target/quantitymeasurement-*.jar
