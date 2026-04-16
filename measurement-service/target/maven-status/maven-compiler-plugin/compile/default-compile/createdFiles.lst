@@ -1,0 +1,12 @@
+com\apps\measurement\client\UserServiceClient.class
+com\apps\measurement\MeasurementServiceApplication.class
+com\apps\measurement\controller\ConversionController.class
+com\apps\measurement\service\ConversionService.class
+com\apps\measurement\model\WeightUnit.class
+com\apps\measurement\dto\ConversionInputDTO.class
+com\apps\measurement\model\VolumeUnit.class
+com\apps\measurement\dto\ConversionHistoryDTO.class
+com\apps\measurement\model\TemperatureUnit.class
+com\apps\measurement\model\LengthUnit.class
+com\apps\measurement\client\UserServiceClientFallback.class
+com\apps\measurement\dto\ConversionResultDTO.class

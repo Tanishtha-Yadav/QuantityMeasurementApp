@@ -1,0 +1,12 @@
+C:\Users\tanis\QuantityMeasurementApp\measurement-service\src\main\java\com\apps\measurement\dto\ConversionResultDTO.java
+C:\Users\tanis\QuantityMeasurementApp\measurement-service\src\main\java\com\apps\measurement\model\TemperatureUnit.java
+C:\Users\tanis\QuantityMeasurementApp\measurement-service\src\main\java\com\apps\measurement\client\UserServiceClient.java
+C:\Users\tanis\QuantityMeasurementApp\measurement-service\src\main\java\com\apps\measurement\dto\ConversionInputDTO.java
+C:\Users\tanis\QuantityMeasurementApp\measurement-service\src\main\java\com\apps\measurement\model\VolumeUnit.java
+C:\Users\tanis\QuantityMeasurementApp\measurement-service\src\main\java\com\apps\measurement\model\LengthUnit.java
+C:\Users\tanis\QuantityMeasurementApp\measurement-service\src\main\java\com\apps\measurement\service\ConversionService.java
+C:\Users\tanis\QuantityMeasurementApp\measurement-service\src\main\java\com\apps\measurement\MeasurementServiceApplication.java
+C:\Users\tanis\QuantityMeasurementApp\measurement-service\src\main\java\com\apps\measurement\model\WeightUnit.java
+C:\Users\tanis\QuantityMeasurementApp\measurement-service\src\main\java\com\apps\measurement\controller\ConversionController.java
+C:\Users\tanis\QuantityMeasurementApp\measurement-service\src\main\java\com\apps\measurement\dto\ConversionHistoryDTO.java
+C:\Users\tanis\QuantityMeasurementApp\measurement-service\src\main\java\com\apps\measurement\client\UserServiceClientFallback.java
